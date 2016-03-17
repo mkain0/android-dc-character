@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.myapps.mkain.dccharacters.adapter.CharacterArrayAdapter;
-import com.myapps.mkain.dccharacters.dao.CharacterDao;
+import com.myapps.mkain.dccharacters.database.DatabaseHandler;
 import com.myapps.mkain.dccharacters.util.Resource;
 
 public class MainActivity extends ListActivity {
@@ -20,16 +20,16 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Resource.init();
+        Resource.init(this);
 
         list = getListView();
-        CharacterArrayAdapter adapter = new CharacterArrayAdapter(this, CharacterDao.getInstance().findAll());
+        CharacterArrayAdapter adapter = new CharacterArrayAdapter(this, DatabaseHandler.getInstance(MainActivity.this).getAllCharacters());
         setListAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItemTitle = CharacterDao.getInstance().findAll().get(position).getTitle();
-                String selectedItemDescription = CharacterDao.getInstance().findAll().get(position).getDescription();
+                String selectedItemTitle = DatabaseHandler.getInstance(MainActivity.this).getAllCharacters().get(position).getTitle();
+                String selectedItemDescription = DatabaseHandler.getInstance(MainActivity.this).getAllCharacters().get(position).getDescription();
 
                 Intent intent = new Intent(getApplicationContext(), SingleListItem.class);
                 intent.putExtra("selectedItemTitle", selectedItemTitle);
